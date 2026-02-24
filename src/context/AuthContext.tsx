@@ -10,7 +10,6 @@ import {
   register as registerService,
   logout as logoutService,
   getStoredAuth,
-  clearStoredAuth,
   type User,
 } from "@/services/authService";
 

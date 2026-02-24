@@ -12,60 +12,9 @@ type Item = {
 const items: Item[] = [
   { label: "Inicio", to: "/" },
   {
-    label: "Personal",
-    children: [
-      { label: "Ver todo el personal", to: "/personal" },
-      {
-        label: "Investigador/a",
-        children: [
-          { label: "Actividades en Docencia", to: "/docenciaInvestigador" }
-        ],
-      },
-    ],
-  },
+    label: "Personal", to: "/personal" },
   {
-    label: "Proyectos",
-    children: [
-      { label: "Ver todos los proyectos", to: "/proyectos" },
-    ],
-  },
-  {
-    label: "Actividades I+D+I",
-    children: [
-      {label: "Registros de Propiedad",to: "/registros-propiedad"},
-      {label: "Trabajos en Reunión Científica",to: "/trabajos-reunion"},
-      {label: "Trabajos en Revistas",to: "/trabajos-revistas"},
-      { label: "Distinciones Recibidas", to: "/distinciones" },
-      { label: "Participaciones Relevantes", to: "/participaciones" },
-      { label: "Visitantes del país y del extranjero", to: "/visitantes" },
-    ],
-  },
-  {
-    label: "Objetos y Financiamiento",
-    children: [
-      { label: "Ver todos los objetos y financiamiento", to: "/objetosfinanciamiento" },
-      { label: "Equipamiento", to: "/equipamiento" },
-      { label: "Erogaciones", to: "/erogaciones" },
-    ],
-  },
-  {
-    label: "Documentación y Biblioteca",
-    children: [
-      { label: "Ver todo en documentación y biblioteca", to: "/documentacion" }
-    ],
-  },
-  {
-    label: "Programa de Actividades",
-    children: [
-      { label: "Ver todos los programas de actividades", to: "/planificaciones" }
-    ],
-  },
-  {
-    label: "Vinculación Socio-Productiva",
-    children: [
-      { label: "Transferencias", to: "/transferencias" },
-    ],
-  },
+    label: "Documentación y Biblioteca", to: "/documentacion" },
 ];
 
 export default function Sidebar() {
