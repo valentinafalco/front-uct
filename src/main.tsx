@@ -6,8 +6,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./styles/index.css";
 
 import AppLayout from "@/layouts/AppLayout";
-import Home from "@/pages/Home";
+import Home from "@/pages/HomeInterno";
 import UctForm from "@/pages/UctForm";
+
 import NotFound from "@/pages/NotFound";
 
 // auth
@@ -18,12 +19,12 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 
 // nuevas páginas
 import PersonalLanding from "@/pages/PersonalHome"; // título + botón Agregar + Volver
-import Personal from "@/pages/PersonalForm";               // formulario de personal
 import PersonalDetalle from "./pages/PersonalDetalle";
 import DocumentacionDetalle from "./pages/DocumentacionDetalle";
 import DocumentacionForm from "./pages/DocumentacionForm";
 import DocumentacionLanding from "./pages/DocumentacionHome";
 import PersonalForm from "@/pages/PersonalForm";
+
 
 
 // Definición de rutas
@@ -45,6 +46,8 @@ const router = createBrowserRouter([
 
       // UCT
       { path: "uct/nueva", element: <UctForm /> },
+      { path: "uct/:id/editar", element: <UctForm /> },
+
 
       // Personal
       { path: "personal", element: <PersonalLanding /> },   // landing  
@@ -57,6 +60,7 @@ const router = createBrowserRouter([
       { path: "documentacion/nuevo", element: <DocumentacionForm /> },
       { path: "documentacion/:id", element: <DocumentacionDetalle /> },
       { path: "documentacion/:id/editar", element: <DocumentacionForm /> },
+
 
       { path: "*", element: <NotFound /> },
     ],

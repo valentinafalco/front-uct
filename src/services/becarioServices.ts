@@ -20,27 +20,27 @@ export interface Becario {
 }
 
 export function crearBecario(payload: BecarioPayload) {
-  return http("/becarios/?grupo_id=<id>", {
+  return http("/becarios/", {
     method: "POST",
     body: JSON.stringify(payload),
   });
 }
 
 export function actualizarBecario(id: number, payload: any) {
-  return http(`/becarios/${id}?grupo_id=<id>`, {
+  return http(`/becarios/${id}`, {
     method: "PUT",
     body: JSON.stringify(payload),
   });
 }
 
 export function getBecarios() {
-  return http<Becario[]>("/becarios/?grupo_id=<id>", {
+  return http<Becario[]>("/becarios/", {
     method: "GET",
   });
 }
 
 export function getBecarioById(id: number) {
-  return http<Becario>(`/becarios/${id}?grupo_id=<id>`, {
+  return http<Becario>(`/becarios/${id}`, {
     method: "GET",
   });
 }

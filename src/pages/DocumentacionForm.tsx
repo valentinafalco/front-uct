@@ -6,13 +6,13 @@ import AutoresField from "@/components/AutoresField";
 import { useDocumentacionForm } from "@/hooks/useDocumentacionForm";
 import { getDocumentacionById } from "@/services/documentacionServices";
 import { removeAutorFromDocumentacion } from "@/services/documentacionServices";
-import { useUct } from "@/hooks/useUct";
+
 
 
 export default function DocumentacionForm() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { uct } = useUct(); // 🔥 TRAEMOS LA UCT
+  const { uctId } = useParams<{ uctId: string }>();
 
   const { data: initial, isLoading } = useQuery({
     queryKey: ["documentacion", id],
@@ -85,9 +85,9 @@ export default function DocumentacionForm() {
         onSubmit={async (e) => {
           e.preventDefault();
           if (!validate()) return;
-          if (!uct) return; // 🔥 aseguramos que exista
+          if (!uctId) return; // 🔥 aseguramos que exista
 
-          await submit(uct.id); // 🔥 pasamos el ID de la UCT al submit
+          await submit(Number(uctId)); // 🔥 pasamos el ID de la UCT al submit
 
           if (isEdit) {
             navigate(`/documentacion/${id}`, {

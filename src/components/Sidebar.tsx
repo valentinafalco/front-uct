@@ -14,7 +14,7 @@ const items: Item[] = [
   {
     label: "Personal", to: "/personal" },
   {
-    label: "Documentación y Biblioteca", to: "/documentacion" },
+    label: "Documentación y Biblioteca", to: "/documentacion" }
 ];
 
 export default function Sidebar() {

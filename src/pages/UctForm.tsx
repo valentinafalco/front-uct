@@ -3,6 +3,12 @@ import { useNavigate } from "react-router-dom";
 import Button from "@/components/Button";
 import { useUct } from "@/hooks/useUct";
 import type { Uct } from "@/services/uctServices";
+import {
+  crearDirectivo,
+  asignarDirectivo,
+} from "@/services/directivosServices";
+import { getCargos, type Cargo } from "@/services/cargosServices";
+import { useQuery } from "@tanstack/react-query";
 
 type UctPayload = Omit<Uct, "id">;
 
@@ -14,10 +20,26 @@ export default function UctForm() {
   const [data, setData] = useState<UctPayload>({
     facultadRegional: "",
     nombreSigla: "",
-    director: "",
-    vicedirector: "",
     correo: "",
     objetivos: "",
+  });
+
+  const [directivos, setDirectivos] = useState([
+    {
+      nombre_apellido: "",
+      id_cargo: 1, // Director
+      fecha_inicio: "",
+    },
+    {
+      nombre_apellido: "",
+      id_cargo: 2, // Vicedirector
+      fecha_inicio: "",
+    },
+  ]);
+
+  const { data: cargos = [] } = useQuery<Cargo[]>({
+    queryKey: ["cargos"],
+    queryFn: getCargos,
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -27,8 +49,6 @@ export default function UctForm() {
       setData({
         facultadRegional: uct.facultadRegional ?? "",
         nombreSigla: uct.nombreSigla ?? "",
-        director: uct.director ?? "",
-        vicedirector: uct.vicedirector ?? "",
         correo: uct.correo ?? "",
         objetivos: uct.objetivos ?? "",
       });
@@ -51,6 +71,23 @@ export default function UctForm() {
       if (value.trim()) clearError(k);
     };
 
+  const changeDirectivo =
+  (index: number, field: string) =>
+  (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    let value: any = e.target.value;
+
+    // 👇 Convertimos a número si es el cargo
+    if (field === "id_cargo") {
+      value = Number(value);
+    }
+
+    setDirectivos((prev) =>
+      prev.map((d, i) =>
+        i === index ? { ...d, [field]: value } : d
+      )
+    );
+  };
+
   const validate = () => {
     const newErrors: Record<string, string> = {};
 
@@ -59,12 +96,6 @@ export default function UctForm() {
 
     if (!data.nombreSigla.trim())
       newErrors.nombreSigla = "Debe ingresar nombre y sigla";
-
-    if (!data.director.trim())
-      newErrors.director = "Debe ingresar director/a";
-
-    if (!data.vicedirector.trim())
-      newErrors.vicedirector = "Debe ingresar vicedirector/a";
 
     if (!data.correo.trim())
       newErrors.correo = "Debe ingresar correo electrónico";
@@ -82,15 +113,31 @@ export default function UctForm() {
     e.preventDefault();
     if (!validate()) return;
 
-    await save({
-      ...data,
-      facultadRegional: data.facultadRegional.trim(),
-      nombreSigla: data.nombreSigla.trim(),
-      director: data.director.trim(),
-      vicedirector: data.vicedirector.trim(),
-      correo: data.correo.trim(),
-      objetivos: data.objetivos.trim(),
-    });
+    const grupo = (await save({
+  ...data,
+  facultadRegional: data.facultadRegional.trim(),
+  nombreSigla: data.nombreSigla.trim(),
+  correo: data.correo.trim(),
+  objetivos: data.objetivos.trim(),
+})) as Uct | undefined;
+
+    const grupoId = grupo?.id ?? uct?.id;
+
+    // 2️⃣ Crear y asignar directivos
+    for (const d of directivos) {
+      if (!d.nombre_apellido.trim()) continue;
+
+      const nuevo = await crearDirectivo({
+        nombre_apellido: d.nombre_apellido.trim(),
+      });
+
+      await asignarDirectivo({
+        id_directivo: nuevo.id,
+        id_grupo_utn: grupoId!,
+        id_cargo: Number(d.id_cargo),
+        fecha_inicio: d.fecha_inicio,
+      });
+    }
 
     navigate("/", {
       state: {
@@ -103,9 +150,7 @@ export default function UctForm() {
 
   const inputClass = (field: string) =>
     `input ${
-      errors[field]
-        ? "!border-red-500 !ring-2 !ring-red-500"
-        : ""
+      errors[field] ? "!border-red-500 !ring-2 !ring-red-500" : ""
     }`;
 
   return (
@@ -140,28 +185,6 @@ export default function UctForm() {
           )}
         </Field>
 
-        <Field label="Director/a">
-          <input
-            className={inputClass("director")}
-            value={data.director}
-            onChange={change("director")}
-          />
-          {errors.director && (
-            <ErrorText>{errors.director}</ErrorText>
-          )}
-        </Field>
-
-        <Field label="Vicedirector/a">
-          <input
-            className={inputClass("vicedirector")}
-            value={data.vicedirector}
-            onChange={change("vicedirector")}
-          />
-          {errors.vicedirector && (
-            <ErrorText>{errors.vicedirector}</ErrorText>
-          )}
-        </Field>
-
         <Field label="Correo electrónico">
           <input
             type="email"
@@ -185,6 +208,68 @@ export default function UctForm() {
             <ErrorText>{errors.objetivos}</ErrorText>
           )}
         </Field>
+
+        {/* 🔹 DIRECTIVOS */}
+        <hr className="my-6" />
+        <h3 className="text-lg font-semibold">
+          Directivos
+        </h3>
+
+        {directivos.map((d, index) => (
+          <div
+            key={index}
+            className="grid md:grid-cols-3 gap-4 border p-4 rounded-xl bg-slate-50"
+          >
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Nombre y Apellido
+              </label>
+              <input
+                className="input"
+                value={d.nombre_apellido}
+                onChange={changeDirectivo(index, "nombre_apellido")}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Cargo
+              </label>
+              <select
+  className="input"
+  value={d.id_cargo ?? ""}
+  onChange={(e) =>
+    setDirectivos((prev) =>
+      prev.map((dir, i) =>
+        i === index
+          ? { ...dir, id_cargo: Number(e.target.value) }
+          : dir
+      )
+    )
+  }
+>
+  <option value="">Seleccionar cargo</option>
+  {cargos.map((c) => (
+    <option key={c.id} value={c.id}>
+      {c.nombre}
+    </option>
+  ))}
+</select>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Fecha inicio
+              </label>
+              <input
+                type="date"
+                className="input"
+                value={d.fecha_inicio}
+                onChange={changeDirectivo(index, "fecha_inicio")}
+              />
+            </div>
+          </div>
+        ))}
 
         <div className="flex justify-between pt-6">
           <Button
