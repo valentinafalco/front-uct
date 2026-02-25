@@ -16,11 +16,12 @@
 
 ```bash
 # 1. Clonar el repo
-git clone <URL_DEL_REPO> gidas-uct
-cd gidas-uct
+git clone <URL_DEL_REPO> front-uct
+cd front-uct
 
 # 2. Instalar dependencias
 npm install
 
 # 3. Correr en desarrollo
 npm run dev
+
