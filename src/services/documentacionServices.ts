@@ -24,19 +24,19 @@ export interface DocumentacionPayload {
 
 // GET ALL
 export async function getDocumentacion(): Promise<Documentacion[]> {
-  return http<Documentacion[]>("/documentacion-bibliografica/");
+  return http<Documentacion[]>("/documentacion-bibliografica/?grupo_id=<id>");
 }
 
 // GET BY ID
 export async function getDocumentacionById(id: number): Promise<Documentacion> {
-  return http<Documentacion>(`/documentacion-bibliografica/${id}`);
+  return http<Documentacion>(`/documentacion-bibliografica/${id}?grupo_id=<id>`);
 }
 
 // CREATE
 export async function createDocumentacion(
   payload: DocumentacionPayload
 ): Promise<Documentacion> {
-  return http<Documentacion>("/documentacion-bibliografica/", {
+  return http<Documentacion>("/documentacion-bibliografica/?grupo_id=<id>", {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -47,7 +47,7 @@ export async function updateDocumentacion(
   id: number,
   payload: DocumentacionPayload
 ): Promise<Documentacion> {
-  return http<Documentacion>(`/documentacion-bibliografica/${id}`, {
+  return http<Documentacion>(`/documentacion-bibliografica/${id}?grupo_id=<id>`, {
     method: "PUT",
     body: JSON.stringify(payload),
   });
@@ -55,7 +55,7 @@ export async function updateDocumentacion(
 
 // DELETE
 export async function deleteDocumentacion(id: number): Promise<void> {
-  return http<void>(`/documentacion-bibliografica/${id}`, {
+  return http<void>(`/documentacion-bibliografica/${id}?grupo_id=<id>`, {
     method: "DELETE",
   });
 }
@@ -66,7 +66,7 @@ export async function addAutorToDocumento(
   docId: number,
   autorId: number
 ) {
-  return http(`/documentacion-bibliografica/${docId}/autores`, {
+  return http(`/documentacion-bibliografica/${docId}/autores?grupo_id=<id>`, {
     method: "POST",
     body: JSON.stringify({ autor_id: autorId }),
   });
@@ -77,7 +77,7 @@ export async function removeAutorFromDocumento(
   autorId: number
 ) {
   return http(
-    `/documentacion-bibliografica/${docId}/autores/${autorId}`,
+    `/documentacion-bibliografica/${docId}/autores/${autorId}?grupo_id=<id>`,
     { method: "DELETE" }
   );
 }
@@ -88,7 +88,7 @@ export const removeAutorFromDocumentacion = async (
   autorId: number
 ) => {
   return http(
-    `/documentacion-bibliografica/${docId}/autores/${autorId}`,
+    `/documentacion-bibliografica/${docId}/autores/${autorId}?grupo_id=<id>`,
     {
       method: "DELETE",
     }

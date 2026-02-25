@@ -20,11 +20,13 @@ export const getPersonalCompletoByRolAndId = (
   rol: string,
   id: number
 ) => {
-  return http<PersonalCompleto>(`/personal/${rol}/${id}`);
+  return http<PersonalCompleto>(`/personal/${rol}/${id}?grupo_id=<id>`, {
+    method: "GET",
+  });
 };
 
 
 export function getPersonalCompletoById(id: number) {
-  return http<PersonalCompleto>(`/personal-all/${id}`);
+  return http<PersonalCompleto>(`/personal-all/${id}?grupo_id=<id>`);
 }
 

@@ -2,7 +2,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Navigate } from "react-router-dom";
 
 import "./styles/index.css";
 
@@ -58,7 +57,7 @@ const router = createBrowserRouter([
       { path: "documentacion/nuevo", element: <DocumentacionForm /> },
       { path: "documentacion/:id", element: <DocumentacionDetalle /> },
       { path: "documentacion/:id/editar", element: <DocumentacionForm /> },
-      
+
       { path: "*", element: <NotFound /> },
     ],
   },

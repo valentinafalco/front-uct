@@ -27,29 +27,29 @@ export interface PersonalPayload {
 // 👉 GET listado general
 export function getPersonal(tipo?: PersonalType) {
   if (tipo) {
-    return http<PersonalItem[]>(`/personal-all/?tipo=${tipo}`);
+    return http<PersonalItem[]>(`/personal-all/?tipo=${tipo}&grupo_id=<id>`);
   }
-  return http<PersonalItem[]>("/personal-all/");
+  return http<PersonalItem[]>("/personal-all/?grupo_id=<id>");
 }
 
 
 // 👉 POST / PUT PTAA + Profesional
 export function upsertPersonal(payload: PersonalPayload) {
-  return http("/personal/", {
+  return http("/personal/?grupo_id=<id>", {
     method: "POST",
     body: JSON.stringify(payload),
   });
 }
 
 export function actualizarPersonal(id: number, payload: any, rol: string) {
-  return http(`/personal/${rol}/${id}`, {
+  return http(`/personal/${rol}/${id}?grupo_id=<id>`, {
     method: "PUT",
     body: JSON.stringify(payload),
   });
 }
 
 export function eliminarPersonal(id: number, rol: string) {
-  return http(`/personal/${rol}/${id}`, {
+  return http(`/personal/${rol}/${id}?grupo_id=<id>`, {
     method: "DELETE",
   });
 }

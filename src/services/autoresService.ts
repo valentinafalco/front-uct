@@ -7,14 +7,14 @@ export interface Autor {
 
 // GET ALL
 export async function getAutores(): Promise<Autor[]> {
-  return http<Autor[]>("/autores/");
+  return http<Autor[]>("/autores/?grupo_id=<id>");
 }
 
 // CREATE
 export async function createAutor(
   nombre_apellido: string
 ): Promise<Autor> {
-  return http<Autor>("/autores/", {
+  return http<Autor>("/autores/?grupo_id=<id>", {
     method: "POST",
     body: JSON.stringify({ nombre_apellido }),
   });
@@ -25,7 +25,7 @@ export async function updateAutor(
   id: number,
   nombre_apellido: string
 ): Promise<Autor> {
-  return http<Autor>(`/autores/${id}`, {
+  return http<Autor>(`/autores/${id}?grupo_id=<id>`, {
     method: "PUT",
     body: JSON.stringify({ nombre_apellido }),
   });
@@ -33,7 +33,7 @@ export async function updateAutor(
 
 // DELETE
 export async function deleteAutor(id: number): Promise<void> {
-  return http<void>(`/autores/${id}`, {
+  return http<void>(`/autores/${id}?grupo_id=<id>`, {
     method: "DELETE",
   });
 }

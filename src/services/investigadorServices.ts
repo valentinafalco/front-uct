@@ -11,7 +11,7 @@ export interface InvestigadorPayload {
 }
 
 export function crearInvestigador(payload: InvestigadorPayload) {
-  return http("/investigadores/", {
+  return http("/investigadores/?grupo_id=<id>", {
     method: "POST",
     body: JSON.stringify(payload),
   });
@@ -22,7 +22,7 @@ export function actualizarInvestigador(
   payload: any,
   rol: string
 ) {
-  return http(`/personal/${rol}/${id}`, {
+  return http(`/personal/${rol}/${id}?grupo_id=<id>`, {
     method: "PUT",
     body: JSON.stringify(payload),
   });
@@ -30,13 +30,13 @@ export function actualizarInvestigador(
 
 
 export function getInvestigadorById(id: number) {
-  return http(`/investigadores/${id}`, {
+  return http(`/investigadores/${id}?grupo_id=<id>`, {
     method: "GET",
   });
 }
 
 export function getInvestigadores() {
-  return http("/investigadores/", {
+  return http("/investigadores/?grupo_id=<id>&activos=true", {
     method: "GET",
   });
 }
